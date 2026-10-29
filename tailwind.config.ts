@@ -25,17 +25,20 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				surface: 'hsl(var(--surface))',
+				sunken: 'hsl(var(--sunken))',
+				sky: 'hsl(var(--sky))',
 				primary: {
-					DEFAULT: '#ee6382',
-					foreground: '#ffffff',
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: '#1B2331',
-					foreground: '#DADADA',
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				accent: {
-					DEFAULT: '#F97316',
-					foreground: '#ffffff',
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -63,6 +66,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			boxShadow: {
+				'pop-sm': '3px 3px 0 0 hsl(var(--foreground))',
+				'pop': '5px 5px 0 0 hsl(var(--foreground))',
+				'pop-lg': '8px 8px 0 0 hsl(var(--foreground))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -183,8 +191,9 @@ export default {
 				'shine': 'shine 1s ease-in-out infinite',
 			},
 			fontFamily: {
-				'sans': ['Noto Sans', 'sans-serif'],
-				'heading': ['Noticia text', 'sans-serif'],
+				'sans': ['DM Sans', 'system-ui', 'sans-serif'],
+				'heading': ['Bricolage Grotesque', 'DM Sans', 'system-ui', 'sans-serif'],
+				'mono': ['JetBrains Mono', 'ui-monospace', 'monospace'],
 				'cursive': ['Schoolbell', 'cursive']
 			},
 		}

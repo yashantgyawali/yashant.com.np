@@ -1,40 +1,36 @@
 
 import React from 'react';
+import { Hand } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Logo from './Logo';
 
 const Header = () => {
   const { toast } = useToast();
 
   return (
-    <header className="sticky top-0 z-50 bg-secondary py-4 shadow-md">
+    <header className="sticky top-0 z-50 bg-background/90 backdrop-blur border-b-2 border-foreground py-3">
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <div className="flex items-center">
-          <img 
-            src="/lovable-uploads/45c113a7-7ce2-4cc6-bb55-9832693f68db.png" 
-            alt="Yashant Logo" 
-            className="h-10 w-auto"
-            onError={(e) => {
-              e.currentTarget.src = 'https://placehold.co/40x40/1B2331/DADADA?text=Y';
-            }}
-          />
-        </div>
-        
-        <a 
-          href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-          target="_blank" 
+        <a href="/" className="group flex items-center gap-2 font-heading font-bold text-2xl tracking-tight hover:text-primary transition-colors">
+          <Logo className="h-10 w-auto" />
+          yashant
+        </a>
+
+        <a
+          href="https://yashantgyawali.typeform.com/to/rbizSifr"
+          target="_blank"
           rel="noopener noreferrer"
-          className="nav-link text-lg group relative"
+          className="btn-sun group whitespace-nowrap !px-4 !py-2 !text-base"
           onClick={(e) => {
             e.preventDefault();
             toast({
               title: "Before you go...",
               description: "Why not explore the portfolio first? There's a fun game waiting for you!",
               action: (
-                <a 
-                  href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-                  target="_blank" 
+                <a
+                  href="https://yashantgyawali.typeform.com/to/rbizSifr"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2 bg-primary text-white rounded-md"
+                  className="btn-primary !px-4 !py-2 !text-sm whitespace-nowrap"
                 >
                   Proceed anyway
                 </a>
@@ -42,7 +38,7 @@ const Header = () => {
             });
           }}
         >
-          Pop me a message <span className="inline-block ml-1 animate-float-balloon">🎈</span>
+          Say heyyyyy <Hand data-villain="slap" className="w-5 h-5 origin-bottom group-hover:animate-wiggle" strokeWidth={2.25} />
         </a>
       </div>
     </header>
