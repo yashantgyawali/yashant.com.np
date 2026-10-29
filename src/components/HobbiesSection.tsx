@@ -14,9 +14,9 @@ const TumetSection = () => {
           <div className="space-y-6">
             <div className="flex justify-start mb-6">
               <img 
-                src="/lovable-uploads/6e39d0ce-790e-4ff1-bdbf-a550682f6c01.png" 
-                alt="Tumlet Logo" 
-                className="h-16"
+                src="/tumlet-logo-dark.svg"
+                alt="Tumlet"
+                className="h-12 w-auto"
               />
             </div>
             
