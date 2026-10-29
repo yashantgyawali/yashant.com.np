@@ -52,7 +52,7 @@ const ExplosiveButton = () => {
     playSound('explosion');
     
     toast({
-      title: "BOOM! 💥",
+      title: "BOOM!",
       description: "You actually pushed the button! Redirecting you now...",
     });
     
@@ -64,7 +64,7 @@ const ExplosiveButton = () => {
     explosion.style.left = '0';
     explosion.style.width = '100%';
     explosion.style.height = '100%';
-    explosion.style.backgroundColor = '#ee6382';
+    explosion.style.backgroundColor = 'hsl(var(--primary))';
     explosion.style.zIndex = '9999';
     explosion.style.opacity = '0';
     explosion.style.transition = 'opacity 0.3s ease-in';
@@ -84,17 +84,17 @@ const ExplosiveButton = () => {
   return (
     <div className="relative">
       <button
-        className={`relative px-6 py-3 border-2 border-white font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-all ${isExploding ? 'animate-explode' : 'hover:animate-wiggle'}`}
+        className={`btn-primary ${isExploding ? 'animate-explode' : 'hover:animate-wiggle'}`}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         disabled={isExploding}
       >
         <div className="flex items-center gap-2">
-          <Bomb className="h-5 w-5" /> Push the button
+          <Bomb className="h-5 w-5" data-villain="bomb" /> Push the button
         </div>
       </button>
-      <p className="mt-2 text-m font-cursive text-gray-500 italic">**What's the worst that could happen?</p>
+      <p className="mt-3 text-lg font-cursive text-muted-foreground">**What's the worst that could happen?</p>
     </div>
   );
 };

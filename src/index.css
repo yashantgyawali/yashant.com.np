@@ -1,39 +1,47 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Noticia+Text:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Schoolbell&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500;700&family=Schoolbell&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Style guide tokens — see STYLEGUIDE.md.
+  Light and playful. Pink leads, sunshine yellow supports,
+  everything sits on plain white with navy ink outlines.
+*/
 @layer base {
   :root {
-    --background: 222 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Paper & ink */
+    --background: 0 0% 100%;        /* white        #FFFFFF */
+    --foreground: 246 36% 17%;      /* navy ink     #1E1B3A */
+    --surface: 0 0% 100%;           /* white card   #FFFFFF */
+    --sunken: 240 20% 97%;          /* cool gray    #F6F6F9 */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 246 36% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 246 36% 17%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 342 81% 66%;
+    /* Brand */
+    --primary: 347 80% 66%;         /* bubblegum    #EE6382 */
     --primary-foreground: 0 0% 100%;
+    --secondary: 43 100% 65%;       /* sunshine     #FFC94A */
+    --secondary-foreground: 246 36% 17%;
+    --accent: 162 54% 63%;          /* mint         #6FD3B5 */
+    --accent-foreground: 246 36% 17%;
+    --sky: 203 81% 72%;             /* sky          #7CC6F2 */
 
-    --secondary: 217 36% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --muted: 240 20% 97%;
+    --muted-foreground: 247 15% 34%; /* soft ink    #4B4766 */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 0 0% 100%;
 
-    --accent: 25 95% 53%;
-    --accent-foreground: 210 40% 98%;
+    --border: 246 36% 17%;
+    --input: 246 36% 17%;
+    --ring: 347 80% 66%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --radius: 1rem;
   }
 }
 
@@ -42,43 +50,76 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-secondary text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    @apply font-heading font-bold tracking-tight text-foreground;
+  }
+
+  ::selection {
+    @apply bg-secondary text-foreground;
   }
 }
 
 @layer components {
+  /* Layout */
+  .section {
+    @apply py-20 md:py-28;
+  }
+
+  .section-alt {
+    @apply bg-sunken;
+  }
+
+  .section-header {
+    @apply max-w-3xl mx-auto text-center mb-12;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-5xl leading-tight mb-4;
+  }
+
+  .lead {
+    @apply text-lg md:text-xl text-muted-foreground leading-relaxed;
+  }
+
+  /* Cards: white sticker with ink outline and a hard offset shadow */
+  .card-pop {
+    @apply bg-surface border-2 border-foreground rounded-2xl shadow-pop;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border-2 border-foreground font-heading font-semibold text-lg shadow-pop-sm transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-pop active:translate-x-0.5 active:translate-y-0.5 active:shadow-none disabled:opacity-60 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground;
+  }
+
+  .btn-sun {
+    @apply btn bg-secondary text-secondary-foreground;
+  }
+
+  .btn-ghost {
+    @apply btn bg-surface text-foreground;
+  }
+
   .nav-link {
-    @apply relative text-foreground hover:text-primary transition-colors duration-300 after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+    @apply relative font-heading font-semibold text-foreground hover:text-primary transition-colors duration-300 after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
 
   .scribble-path {
-    @apply w-full stroke-[#DADADA] stroke-[4] fill-transparent;
+    @apply w-full stroke-foreground stroke-[4] fill-transparent;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     animation: scribble 5s linear forwards;
-  }
-
-  .door {
-    @apply relative w-full h-full bg-secondary border-4 border-foreground rounded-lg overflow-hidden transition-transform duration-500;
-    transform-style: preserve-3d;
-  }
-
-  .door-front {
-    @apply absolute inset-0 bg-secondary flex items-center justify-center;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-  }
-
-  .door-back {
-    @apply absolute inset-0 bg-secondary flex items-center justify-center;
-    transform: rotateY(180deg);
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
   }
 
   .button-bounce {
@@ -88,37 +129,18 @@
   .button-explode {
     @apply hover:animate-wiggle active:animate-explode transition-transform;
   }
-  
-  /* Door Game Specific Styles */
-  .backDoor {
-    @apply relative overflow-hidden shadow-lg;
-  }
-  
+
   /* Balloon animation */
   .animate-float-balloon {
     animation: float-balloon 3s ease-in-out infinite;
     display: inline-block;
     transform-origin: center bottom;
   }
-  
+
   /* Elusive button */
   .elusive-button {
     position: relative;
     transition: transform 0.2s ease-out;
-  }
-  
-  .elusive-button:hover {
-    transform: translate(
-      calc(100px * Math.random()),
-      calc(-50px * Math.random())
-    );
-    cursor: not-allowed;
-  }
-  
-  /* Game preview container */
-  .game-preview {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
   }
 }
 
@@ -145,11 +167,11 @@
   width: 100%;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: dash 5s linear 1;
+  animation: dash 6.5s linear 1;
 }
 
 .path2 {
-  animation: visible 5s linear 1;
+  animation: visible 6.5s linear 1;
 }
 
 @keyframes visible {
@@ -170,20 +192,6 @@
   }
   to {
     stroke-dashoffset: 0;
-  }
-}
-
-/* Door Animation */
-.door-open {
-  animation: doorOpen 0.5s forwards;
-}
-
-@keyframes doorOpen {
-  0% {
-    transform: perspective(1000px) rotateY(0);
-  }
-  100% {
-    transform: perspective(1000px) rotateY(-105deg);
   }
 }
 
@@ -213,13 +221,13 @@
     transform: translateX(0) rotate(0);
   }
   25% {
-    transform: translateX(30px) rotate(10deg);
+    transform: translateX(15%) rotate(8deg);
   }
   50% {
     transform: translateX(0) rotate(0);
   }
   75% {
-    transform: translateX(-30px) rotate(-10deg);
+    transform: translateX(-15%) rotate(-8deg);
   }
   100% {
     transform: translateX(0) rotate(0);
@@ -266,35 +274,6 @@
   }
 }
 
-/* Responsive door styles */
-@media (max-width: 768px) {
-  .backDoor {
-    height: 180px;
-  }
-}
-
-@media (max-width: 640px) {
-  .backDoor {
-    height: 160px;
-  }
-}
-
-@media (max-width: 480px) {
-  .backDoor {
-    height: 140px;
-  }
-  
-  .door-container {
-    gap: 2px;
-  }
-}
-
-@media (max-width: 375px) {
-  .backDoor {
-    height: 120px;
-  }
-}
-
 /* Balloon float animation */
 @keyframes float-balloon {
   0% {
@@ -326,4 +305,227 @@
 
 .group:hover .group-hover\:animate-shine {
   animation: shine 1s ease-in-out infinite;
+}
+
+/* ---------- Pac-Man easter egg ---------- */
+.pacman-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.pacman-mask {
+  position: absolute;
+  border-radius: 3px;
+}
+
+.pacman-player,
+.pacman-villain,
+.pacman-blast,
+.pacman-slapfx {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.pacman-player {
+  width: 40px;
+  height: 40px;
+  z-index: 3;
+}
+
+.pacman-player svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.pacman-player.is-hurt svg {
+  animation: pacman-blink 0.16s steps(2, jump-none) infinite;
+}
+
+.pacman-dizzy {
+  position: absolute;
+  inset: -16px;
+  display: none;
+  color: hsl(var(--foreground));
+  animation: pacman-spin 0.9s linear infinite;
+}
+
+.pacman-player.is-dizzy .pacman-dizzy {
+  display: block;
+}
+
+.pacman-dizzy-star {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  fill: hsl(var(--secondary));
+}
+
+.pacman-villain {
+  width: 48px;
+  height: 48px;
+  z-index: 2;
+}
+
+.pacman-villain-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 2px solid hsl(var(--foreground));
+  box-shadow: 3px 3px 0 0 hsl(var(--foreground));
+  color: hsl(var(--foreground));
+  background: hsl(var(--surface));
+}
+
+.pacman-villain--bomb .pacman-villain-body { background: hsl(var(--secondary)); }
+.pacman-villain--slap .pacman-villain-body { background: hsl(var(--accent)); }
+.pacman-villain--sword .pacman-villain-body { background: hsl(var(--sky)); }
+
+.pacman-villain.is-gone { opacity: 0; }
+
+.pacman-villain.is-lit .pacman-villain-body {
+  animation: pacman-fuse 0.18s steps(2, jump-none) infinite;
+}
+
+.pacman-form-hand,
+.pacman-form-sword {
+  display: inline-flex;
+}
+
+.pacman-form-sword {
+  display: none;
+  transform: rotate(var(--aim, 0deg));
+}
+
+.pacman-villain[data-form="sword"] .pacman-form-hand { display: none; }
+.pacman-villain[data-form="sword"] .pacman-form-sword { display: inline-flex; }
+
+.pacman-villain.is-telegraph .pacman-villain-body {
+  background: hsl(var(--primary));
+  animation: pacman-shake 0.07s linear infinite;
+}
+
+.pacman-blast {
+  width: 340px;
+  height: 340px;
+  z-index: 4;
+}
+
+.pacman-blast-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  border: 4px solid hsl(var(--foreground));
+  background: radial-gradient(circle, hsl(var(--secondary)) 0%, hsl(var(--primary) / 0.75) 55%, hsl(var(--primary) / 0) 72%);
+  opacity: 0;
+}
+
+.pacman-slapfx {
+  width: 140px;
+  height: 110px;
+  z-index: 5;
+}
+
+.pacman-slapfx-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.pacman-slapfx-hand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  border: 3px solid hsl(var(--foreground));
+  background: hsl(var(--accent));
+  color: hsl(var(--foreground));
+  box-shadow: 4px 4px 0 0 hsl(var(--foreground));
+}
+
+.pacman-catcher {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  touch-action: none;
+  outline: none;
+}
+
+.pacman-joy {
+  position: fixed;
+  top: -40px;
+  left: -40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  border: 2px solid hsl(var(--foreground) / 0.5);
+  background: hsl(var(--background) / 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pacman-joy.is-active { display: flex; }
+
+.pacman-joy-knob {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 2px solid hsl(var(--foreground));
+  background: hsl(var(--primary));
+}
+
+.pacman-hint {
+  animation: pacman-hint 6s ease forwards;
+}
+
+@keyframes pacman-blink {
+  from { opacity: 1; }
+  to { opacity: 0.2; }
+}
+
+@keyframes pacman-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pacman-fuse {
+  from { background: hsl(var(--secondary)); }
+  to { background: hsl(var(--primary)); }
+}
+
+@keyframes pacman-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@keyframes pacman-hint {
+  0%, 75% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pacman-player.is-hurt svg { animation: none; opacity: 0.45; }
+  .pacman-dizzy { animation: none; }
+  .pacman-villain.is-lit .pacman-villain-body { animation: none; background: hsl(var(--primary)); }
+  .pacman-villain.is-telegraph .pacman-villain-body { animation: none; }
+  .pacman-hint { animation-name: pacman-hint; animation-timing-function: steps(1, end); }
 }

@@ -42,7 +42,7 @@ const ElusiveButton: React.FC<ElusiveButtonProps> = ({ children, className = '' 
   return (
     <button 
       ref={buttonRef}
-      className={`absolute px-6 py-3 border-2 border-accent font-medium rounded-md text-white bg-accent transition-transform duration-200 ${className}`}
+      className={`absolute px-6 py-3 btn-sun transition-transform duration-200 ${className}`}
     >
       {children}
     </button>

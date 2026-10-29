@@ -7,21 +7,23 @@ import DrunkDaveSection from '@/components/DrunkDaveSection';
 import CSSDrawingsSection from '@/components/CSSDrawingsSection';
 import TumetSection from '@/components/HobbiesSection';
 import Footer from '@/components/Footer';
+import PacmanEasterEgg from '@/components/PacmanEasterEgg';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-secondary">
+    <div className="min-h-screen bg-background">
       <Header />
       
       <main>
         <HeroSection />
         <DoorGame />
-        <CSSDrawingsSection />
         <DrunkDaveSection />
+        <CSSDrawingsSection />
         <TumetSection />
       </main>
       
       <Footer />
+      <PacmanEasterEgg />
     </div>
   );
 };
