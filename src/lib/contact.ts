@@ -1,9 +1,11 @@
 // Everything the contact page needs in one place: where answers go, and the
-// copy + questions for each button that can open it. Sending uses FormSubmit's
-// free AJAX endpoint (no account, no SDK, no trackers).
+// copy + questions for each button that can open it. Sending uses Web3Forms'
+// free endpoint (no SDK, no trackers). The access key is public by design: it can
+// only send mail to the inbox it was made for.
 
 export const CONTACT_EMAIL = 'yashantgyawali@gmail.com';
-export const CONTACT_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
+export const CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_ACCESS_KEY = '972585e4-ca39-40ea-a29c-82110f8e2925';
 
 export const CONTACT_HASH_PREFIX = '#hey/';
 
@@ -261,16 +263,16 @@ export const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test
 
 export type Answers = Record<string, string>;
 
-/** The JSON FormSubmit receives. Question labels become the rows of the email table. */
+/** The JSON Web3Forms receives. Question labels become the rows of the email. */
 export const buildPayload = (ctx: ContactContext, answers: Answers, honey: string) => {
   const nameValue = (answers.name ?? '').trim();
   const emailValue = (answers.email ?? '').trim();
   const payload: Record<string, string> = {
-    _subject: ctx.subject(nameValue),
-    _template: 'table',
-    _captcha: 'false',
-    _replyto: emailValue,
-    _honey: honey,
+    access_key: WEB3FORMS_ACCESS_KEY,
+    subject: ctx.subject(nameValue),
+    from_name: nameValue ? `${nameValue} via yashant.com.np` : 'yashant.com.np',
+    replyto: emailValue,
+    botcheck: honey,
     'Button clicked': ctx.source,
     Page: window.location.origin,
     Name: nameValue,
@@ -300,7 +302,6 @@ export const sendContact = async (payload: Record<string, string>, signal?: Abor
       signal: controller.signal,
     });
     const data: { success?: unknown; message?: unknown } = await res.json().catch(() => ({}));
-    // Until the inbox owner activates the form, FormSubmit answers success "false".
     if (!res.ok || String(data.success) !== 'true') {
       throw new ContactSendError(typeof data.message === 'string' ? data.message : `HTTP ${res.status}`);
     }

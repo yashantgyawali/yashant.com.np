@@ -6,6 +6,7 @@ import './contact-blast.css';
 import {
   Answers,
   CONTACT_CONTEXTS,
+  ContactSendError,
   ChipsField,
   ContactContextKey,
   Field,
@@ -102,6 +103,8 @@ const ContactPage = () => {
   const [answers, setAnswers] = useState<Partial<Record<ContactContextKey, Answers>>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>('idle');
+  // What the mail service said when a send failed, shown under the apology.
+  const [sendError, setSendError] = useState('');
   // True when opening added a history entry, so closing should go Back instead.
   const pushedRef = useRef(false);
   const sendingRef = useRef(false);
@@ -272,8 +275,9 @@ const ContactPage = () => {
       if (controller.signal.aborted) return; // page closed mid-send
       setStatus('success');
       formTopRef.current?.scrollIntoView({ block: 'start' });
-    } catch {
+    } catch (err) {
       if (controller.signal.aborted) return;
+      setSendError(err instanceof ContactSendError ? err.message : '');
       setStatus('error');
     } finally {
       if (abortRef.current === controller) {
@@ -480,7 +484,7 @@ const ContactPage = () => {
               {/* Honeypot: real people never see or fill this */}
               <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
                 <label htmlFor="contact-honey">Leave this empty</label>
-                <input ref={honeyRef} id="contact-honey" type="text" name="_honey" tabIndex={-1} autoComplete="off" defaultValue="" />
+                <input ref={honeyRef} id="contact-honey" type="text" name="botcheck" tabIndex={-1} autoComplete="off" defaultValue="" />
               </div>
 
               {status === 'error' && (
@@ -492,6 +496,9 @@ const ContactPage = () => {
                   <p className="mt-2 text-lg text-muted-foreground">
                     Your answers are safe. Try again, or email me like it's 2005.
                   </p>
+                  {sendError && (
+                    <p className="mt-2 font-mono text-sm text-muted-foreground">The mail robot said: {sendError}</p>
+                  )}
                   <div className="mt-5 flex flex-wrap gap-3">
                     <button
                       type="button"
