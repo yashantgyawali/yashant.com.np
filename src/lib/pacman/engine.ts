@@ -81,10 +81,11 @@ const createSounds = () => {
   const files = {
     tick: '/sounds/bomb-tick.mp3',
     explosion: '/sounds/explosion.mp3',
-    sling: '/sounds/sling.mp3',
     buzzer: '/sounds/buzzer.mp3',
   };
   const audio = {} as Record<keyof typeof files, HTMLAudioElement>;
+  // The slap bounce is synthesized: a cartoon "boing" needs no audio file.
+  let ctx: AudioContext | null = null;
   (Object.keys(files) as (keyof typeof files)[]).forEach((name) => {
     const a = new Audio(files[name]);
     a.preload = 'auto';
@@ -101,6 +102,35 @@ const createSounds = () => {
         /* autoplay blocked, stay quiet */
       }
     },
+    boing() {
+      try {
+        ctx ??= new AudioContext();
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        // Fast wobble on the pitch gives the spring its "oing".
+        const wobble = ctx.createOscillator();
+        const wobbleDepth = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(140, t);
+        osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(180, t + 0.5);
+        wobble.frequency.value = 28;
+        wobbleDepth.gain.setValueAtTime(60, t);
+        wobbleDepth.gain.linearRampToValueAtTime(0, t + 0.5);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+        wobble.connect(wobbleDepth).connect(osc.frequency);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t);
+        wobble.start(t);
+        osc.stop(t + 0.6);
+        wobble.stop(t + 0.6);
+      } catch {
+        /* no Web Audio, stay quiet */
+      }
+    },
     stop(name: keyof typeof files) {
       audio[name].pause();
     },
@@ -110,6 +140,7 @@ const createSounds = () => {
         a.removeAttribute('src');
         a.load();
       });
+      ctx?.close().catch(() => {});
     },
   };
 };
@@ -419,7 +450,7 @@ export const startPacmanEngine = (els: PacmanElements, cb: PacmanCallbacks) => {
             dx /= d;
             dy /= d;
           }
-          sounds.play('sling');
+          sounds.boing();
           showSlap((px + v.x) / 2, (py + v.y) / 2, dx < 0);
           knockVX = (dx * SLAP.knock) / SLAP.knockTime;
           knockVY = (dy * SLAP.knock) / SLAP.knockTime;
