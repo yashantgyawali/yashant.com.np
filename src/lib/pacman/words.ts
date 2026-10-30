@@ -1,6 +1,7 @@
-// Turns the visible page text into Pac-Man pellets.
+// Turns the visible page text and icons into Pac-Man pellets.
 // We never touch React-managed text nodes: each word is measured with a Range
-// and "eaten" by covering it with a mask in the game's own layer.
+// and "eaten" by covering it with a mask in the game's own layer. Icons are
+// eaten by hiding the element itself (the engine restores it on exit).
 
 export interface DocRect {
   x: number;
@@ -14,16 +15,17 @@ export interface Word {
   rects: DocRect[]; // document coordinates; more than one if the word wraps
   color: string; // opaque background behind the word, used for its mask
   eaten: boolean;
+  el?: HTMLElement | SVGElement; // set for icons: eaten by hiding this element
 }
 
 // Anything in here is never a pellet.
 const SKIP_SELECTOR =
   'script, style, noscript, iframe, template, [aria-hidden="true"], [data-pacman-ui]';
 
-// Stable ids for text nodes so eaten words survive a resize re-measure.
-const nodeIds = new WeakMap<Text, number>();
+// Stable ids for text nodes and icons so eaten pellets survive a resize re-measure.
+const nodeIds = new WeakMap<Node, number>();
 let nextNodeId = 1;
-const idFor = (node: Text) => {
+const idFor = (node: Node) => {
   let id = nodeIds.get(node);
   if (!id) {
     id = nextNodeId++;
@@ -166,6 +168,43 @@ export const collectWords = (roots: Element[], docW: number, docH: number): Word
   }
   range.detach();
   return words;
+};
+
+// Icons that are never pellets: the villains' source icons, the hero doodle
+// and its hint, the game's own UI and the contact page.
+const ICON_SKIP_SELECTOR =
+  'script, noscript, iframe, template, [data-villain], [data-pacman-start], [data-pacman-hint], [data-pacman-ui], [data-contact-page]';
+const ICON_MAX = 64; // anything bigger is an illustration, not an icon
+
+// Measure every visible inline svg and small image inside the given roots.
+// `keepHidden` lets icons the game already ate (visibility: hidden) through,
+// so a resize re-measure doesn't drop them from the count.
+export const collectIcons = (
+  roots: Element[],
+  docW: number,
+  docH: number,
+  keepHidden: (el: Element) => boolean,
+): Word[] => {
+  const icons: Word[] = [];
+  const isVisible = createVisibilityCheck();
+  const sx = window.scrollX;
+  const sy = window.scrollY;
+
+  for (const root of roots) {
+    for (const el of Array.from(root.querySelectorAll<HTMLElement | SVGElement>('svg, img'))) {
+      // Only the outermost svg counts; nested ones are part of the same icon.
+      if (el instanceof SVGElement && el.parentElement?.closest('svg')) continue;
+      if (el.closest(ICON_SKIP_SELECTOR)) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 4 || r.height < 4 || r.width > ICON_MAX || r.height > ICON_MAX) continue;
+      if (!keepHidden(el) && !isVisible(el)) continue;
+      const x = r.left + sx;
+      const y = r.top + sy;
+      if (x + r.width < 0 || y + r.height < 0 || x > docW || y > docH) continue;
+      icons.push({ key: `icon:${idFor(el)}`, rects: [{ x, y, w: r.width, h: r.height }], color: '', eaten: false, el });
+    }
+  }
+  return icons;
 };
 
 // Uniform-grid bucketing so collision only checks words near Pac-Man.

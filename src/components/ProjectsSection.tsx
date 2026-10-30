@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { contactHref } from '@/lib/contact';
 
 interface ProjectCardProps {
   title: string;
@@ -68,9 +69,7 @@ const ProjectsSection = () => {
         <div className="text-center mt-12">
           <p className="mb-4">Please hit the damn button. I even gave it a different color here.</p>
           <a 
-            href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-            target="_blank" 
-            rel="noopener noreferrer"
+            href={contactHref('say-hey')}
             className="cta-button color-cta inline-block mx-auto"
           >
             The colored button

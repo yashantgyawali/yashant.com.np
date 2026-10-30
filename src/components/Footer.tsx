@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Hand, Sword } from 'lucide-react';
 import { useSounds } from '@/utils/useSounds';
+import { contactHref } from '@/lib/contact';
 
 const Footer = () => {
   const { playSound, soundsLoaded } = useSounds();
@@ -80,9 +81,7 @@ const Footer = () => {
             
             <div className="flex justify-center">
               <a 
-                href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-                target="_blank"
-                rel="noopener noreferrer"
+                href={contactHref('quest')}
                 className="say-hello-btn btn-sun !px-8 group relative overflow-hidden"
                 onMouseEnter={handleSayHelloHover}
               >

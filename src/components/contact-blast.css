@@ -1,0 +1,95 @@
+/*
+  "Push the button" contact page: the aftermath of the explosion.
+  Pink page, drifting smoke, rising embers and a bit of soot.
+  Tokens are re-pointed inside the scope so text and controls stay readable on pink.
+*/
+[data-contact-page][data-theme='blast'] {
+  --background: 347 80% 66%;
+  --primary: 246 36% 17%;
+  --primary-foreground: 0 0% 100%;
+  --muted-foreground: 246 30% 22%;
+  --destructive: 0 75% 24%;
+  --ring: 246 36% 17%;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 28%, hsl(347 90% 76%) 0%, hsl(347 80% 66%) 55%, hsl(345 55% 50%) 100%),
+    hsl(347 80% 66%);
+}
+
+/* The logo keeps its pink cap, it just survived an explosion */
+[data-contact-page][data-theme='blast'] .contact-logo {
+  --primary: 347 80% 66%;
+}
+
+[data-contact-page][data-theme='blast'] .contact-topbar {
+  background: hsl(347 80% 66% / 0.85);
+}
+
+.blast-backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Soot: a sprinkle of dark specks */
+.blast-soot {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 12% 18%, hsl(246 36% 17% / 0.5) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 78% 12%, hsl(246 36% 17% / 0.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 64% 72%, hsl(246 36% 17% / 0.45) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 26% 82%, hsl(246 36% 17% / 0.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 90% 58%, hsl(246 36% 17% / 0.4) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 44% 40%, hsl(246 36% 17% / 0.35) 0 1px, transparent 2px);
+  background-size: 260px 260px, 340px 340px, 300px 300px, 380px 380px, 220px 220px, 180px 180px;
+}
+
+/* Smoke: big soft puffs drifting around slowly */
+.blast-puff {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(28px);
+  animation: blast-drift var(--dur, 26s) ease-in-out infinite alternate;
+}
+
+.blast-puff--light {
+  background: radial-gradient(circle, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0) 70%);
+}
+
+.blast-puff--dark {
+  background: radial-gradient(circle, hsl(246 36% 17% / 0.28) 0%, hsl(246 36% 17% / 0) 70%);
+}
+
+@keyframes blast-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(var(--dx, 40px), var(--dy, -30px), 0) scale(1.15); }
+  100% { transform: translate3d(calc(var(--dx, 40px) * -0.6), calc(var(--dy, -30px) * 0.8), 0) scale(0.95); }
+}
+
+/* Embers: small sparks floating up and fading out */
+.blast-ember {
+  position: absolute;
+  bottom: -12px;
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+  border-radius: 9999px;
+  background: hsl(var(--secondary));
+  box-shadow: 0 0 10px 2px hsl(43 100% 65% / 0.7);
+  opacity: 0;
+  animation: blast-rise var(--dur, 9s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes blast-rise {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: 0.9; }
+  70% { opacity: 0.6; }
+  100% { transform: translate3d(var(--drift, 30px), -105vh, 0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blast-puff { animation: none; }
+  .blast-ember { display: none; }
+}
