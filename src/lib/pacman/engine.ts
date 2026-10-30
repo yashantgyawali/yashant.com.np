@@ -444,7 +444,6 @@ export const startPacmanEngine = (els: PacmanElements, cb: PacmanCallbacks) => {
         if (chase(v, SWORD.speed, dt) < SWORD.range) {
           v.state = 'telegraph';
           v.timer = SWORD.telegraph;
-          v.el.dataset.form = 'sword';
           v.el.classList.add('is-telegraph');
         }
         break;
@@ -480,7 +479,6 @@ export const startPacmanEngine = (els: PacmanElements, cb: PacmanCallbacks) => {
       }
       case 'rest':
         if ((v.timer -= dt) <= 0) {
-          v.el.dataset.form = 'hand';
           v.state = 'chase';
         }
         break;

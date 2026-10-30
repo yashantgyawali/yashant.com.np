@@ -399,18 +399,10 @@
   animation: pacman-fuse 0.18s steps(2, jump-none) infinite;
 }
 
-.pacman-form-hand,
 .pacman-form-sword {
   display: inline-flex;
-}
-
-.pacman-form-sword {
-  display: none;
   transform: rotate(var(--aim, 0deg));
 }
-
-.pacman-villain[data-form="sword"] .pacman-form-hand { display: none; }
-.pacman-villain[data-form="sword"] .pacman-form-sword { display: inline-flex; }
 
 .pacman-villain.is-telegraph .pacman-villain-body {
   background: hsl(var(--primary));

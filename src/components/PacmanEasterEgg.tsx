@@ -81,11 +81,8 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
             <Hand className="h-6 w-6" strokeWidth={2.25} />
           </div>
         </div>
-        <div ref={swordRef} className="pacman-villain pacman-villain--sword" data-form="hand">
+        <div ref={swordRef} className="pacman-villain pacman-villain--sword">
           <div className="pacman-villain-body">
-            <span className="pacman-form-hand">
-              <Hand className="h-6 w-6" strokeWidth={2.25} />
-            </span>
             <span className="pacman-form-sword">
               <Sword className="h-7 w-7" strokeWidth={2.25} />
             </span>
