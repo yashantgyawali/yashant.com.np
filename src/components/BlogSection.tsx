@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { contactHref } from '@/lib/contact';
 
 interface BlogCardProps {
   title: string;
@@ -70,9 +71,7 @@ const BlogSection = () => {
             Think you can beat me in a game of Table Tennis? Let me know{" "}
             <a 
               className="text-primary hover:underline font-bold" 
-              href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href={contactHref('say-hey')}
             >
               here
             </a>.

@@ -1,7 +1,8 @@
 
 import React, { useEffect } from 'react';
-import { Hand } from 'lucide-react';
+import { Hand, Sword } from 'lucide-react';
 import { useSounds } from '@/utils/useSounds';
+import { contactHref } from '@/lib/contact';
 
 const Footer = () => {
   const { playSound, soundsLoaded } = useSounds();
@@ -73,24 +74,20 @@ const Footer = () => {
             <p className="max-w-2xl mx-auto mb-8 text-lg text-foreground">
               You made it all the way to the bottom. Thank you for stopping by <Hand className="inline w-5 h-5 -mt-1 text-foreground" strokeWidth={2.25} />
               <br /><br />
-              One last try (I promise).
-              <br /><br />
-              I use design thinking approach to create user-centric projects for you.
-              I am always up for a coffee or a chat about galaxies, aliens, time-travel and potential
-              <span className="font-bold underline decoration-secondary decoration-4 underline-offset-4"> projects</span>.
+              One last try (I promise). Got a
+              <span className="font-bold underline decoration-secondary decoration-4 underline-offset-4"> dragon-sized project</span>,
+              or just want to talk galaxies, aliens and time-travel over coffee? Let's go.
             </p>
             
             <div className="flex justify-center">
               <a 
-                href="https://yashantgyawali.typeform.com/to/rbizSifr" 
-                target="_blank"
-                rel="noopener noreferrer"
+                href={contactHref('quest')}
                 className="say-hello-btn btn-sun !px-8 group relative overflow-hidden"
                 onMouseEnter={handleSayHelloHover}
               >
                 <span className="relative z-10 inline-flex items-center">
-                  Say Hello
-                  <Hand data-villain="sword" className="ml-2 w-5 h-5 animate-wiggle" strokeWidth={2.25} />
+                  Start a quest
+                  <Sword data-villain="sword" className="ml-2 w-5 h-5 origin-bottom-left group-hover:animate-wiggle" strokeWidth={2.25} />
                 </span>
                 <span className="absolute inset-0 bg-white/30 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-500"></span>
                 <span className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine"></span>

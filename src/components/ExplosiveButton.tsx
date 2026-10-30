@@ -3,14 +3,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Bomb } from 'lucide-react';
 import { useSounds } from '@/utils/useSounds';
+import { openContact } from '@/lib/contact';
 
 const ExplosiveButton = () => {
   const [isExploding, setIsExploding] = useState(false);
   const { toast } = useToast();
   const { playSound } = useSounds();
-  const tickingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Looping fuse tick while the cursor is on the button.
+  const tickRef = useRef<HTMLAudioElement | null>(null);
   const explosionElementRef = useRef<HTMLDivElement | null>(null);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Debug to check if sounds are available
   useEffect(() => {
@@ -20,11 +24,12 @@ const ExplosiveButton = () => {
   // Clean up effects when component unmounts
   useEffect(() => {
     return () => {
-      if (tickingTimeoutRef.current) {
-        clearTimeout(tickingTimeoutRef.current);
-      }
+      tickRef.current?.pause();
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
+      }
+      if (fadeTimeoutRef.current) {
+        clearTimeout(fadeTimeoutRef.current);
       }
       // Remove explosion element if it exists
       if (explosionElementRef.current && document.body.contains(explosionElementRef.current)) {
@@ -33,27 +38,41 @@ const ExplosiveButton = () => {
     };
   }, []);
 
+  const stopTick = () => {
+    const tick = tickRef.current;
+    if (!tick) return;
+    tick.pause();
+    tick.currentTime = 0;
+  };
+
   const handleMouseEnter = () => {
-   
+    if (isExploding) return;
+    if (!tickRef.current) {
+      const tick = new Audio('/sounds/bomb-tick.mp3');
+      tick.loop = true;
+      tick.volume = 0.2;
+      tickRef.current = tick;
+    }
+    tickRef.current.currentTime = 0;
+    tickRef.current.play().catch(() => {
+      /* autoplay blocked until the visitor interacts, stay quiet */
+    });
   };
 
   const handleMouseLeave = () => {
-    // If there's a timeout for ticking, clear it
-    if (tickingTimeoutRef.current) {
-      clearTimeout(tickingTimeoutRef.current);
-      tickingTimeoutRef.current = null;
-    }
+    stopTick();
   };
 
   const handleClick = () => {
+    stopTick();
     setIsExploding(true);
     // Play explosion sound
     console.log('Playing explosion sound...');
     playSound('explosion');
     
-    toast({
+    const boom = toast({
       title: "BOOM!",
-      description: "You actually pushed the button! Redirecting you now...",
+      description: "Well, now you have to talk to me.",
     });
     
     // Add explosion effect to the entire page
@@ -75,15 +94,26 @@ const ExplosiveButton = () => {
       explosion.style.opacity = '1';
     }, 100);
     
-    // Redirect after a delay
+    // Once the screen is pink, open the contact page underneath, then fade
+    // the flash away and clear it so the site is usable again.
     redirectTimeoutRef.current = setTimeout(() => {
-      window.location.href = 'https://yashantgyawali.typeform.com/to/rbizSifr';
+      // The toast would sit over the contact page's top bar on phones.
+      boom.dismiss();
+      openContact('push-the-button', buttonRef.current);
+      setIsExploding(false);
+      explosion.style.transition = 'opacity 0.4s ease-out';
+      explosion.style.opacity = '0';
+      fadeTimeoutRef.current = setTimeout(() => {
+        explosion.remove();
+        if (explosionElementRef.current === explosion) explosionElementRef.current = null;
+      }, 450);
     }, 900);
   };
 
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         className={`btn-primary ${isExploding ? 'animate-explode' : 'hover:animate-wiggle'}`}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}

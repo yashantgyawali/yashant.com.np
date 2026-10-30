@@ -8,6 +8,7 @@ import CSSDrawingsSection from '@/components/CSSDrawingsSection';
 import TumetSection from '@/components/HobbiesSection';
 import Footer from '@/components/Footer';
 import PacmanEasterEgg from '@/components/PacmanEasterEgg';
+import ContactPage from '@/components/ContactPage';
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
       
       <Footer />
       <PacmanEasterEgg />
+      <ContactPage />
     </div>
   );
 };

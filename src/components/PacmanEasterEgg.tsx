@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, Bomb, Hand, Heart, RotateCcw, Star, Sword, X } from 'lucide-react';
 import { PACMAN_START_EVENT } from '@/lib/pacman/events';
 import { startPacmanEngine, type GameResult, type HudState, type VillainKind } from '@/lib/pacman/engine';
+import Logo from './Logo';
+import './pacman-extra.css';
 
 // Up Up Down Down Left Right Left Right B A
 const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
@@ -23,8 +25,8 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
   const joyRef = useRef<HTMLDivElement>(null);
   const knobRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
-  const faceRef = useRef<SVGGElement>(null);
-  const mouthRef = useRef<SVGPathElement>(null);
+  const facingRef = useRef<HTMLDivElement>(null);
+  const chompRef = useRef<HTMLDivElement>(null);
   const bombRef = useRef<HTMLDivElement>(null);
   const slapRef = useRef<HTMLDivElement>(null);
   const swordRef = useRef<HTMLDivElement>(null);
@@ -49,8 +51,8 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
         joystick: joyRef.current!,
         joystickKnob: knobRef.current!,
         player: playerRef.current!,
-        playerFace: faceRef.current!,
-        playerMouth: mouthRef.current!,
+        playerFacing: facingRef.current!,
+        playerChomp: chompRef.current!,
         villains,
         blast: blastRef.current!,
         slapFx: slapFxRef.current!,
@@ -76,35 +78,26 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
             <Bomb className="h-6 w-6" strokeWidth={2.25} />
           </div>
         </div>
+        {/* The engine clones this one for every extra high-five */}
         <div ref={slapRef} className="pacman-villain pacman-villain--slap">
           <div className="pacman-villain-body">
             <Hand className="h-6 w-6" strokeWidth={2.25} />
           </div>
         </div>
-        <div ref={swordRef} className="pacman-villain pacman-villain--sword" data-form="hand">
+        <div ref={swordRef} className="pacman-villain pacman-villain--sword">
           <div className="pacman-villain-body">
-            <span className="pacman-form-hand">
-              <Hand className="h-6 w-6" strokeWidth={2.25} />
-            </span>
             <span className="pacman-form-sword">
               <Sword className="h-7 w-7" strokeWidth={2.25} />
             </span>
           </div>
         </div>
 
-        <div ref={playerRef} className="pacman-player">
-          <svg viewBox="-22 -22 44 44">
-            <g ref={faceRef}>
-              <path
-                ref={mouthRef}
-                fill="hsl(var(--secondary))"
-                stroke="hsl(var(--foreground))"
-                strokeWidth="3"
-                strokeLinejoin="round"
-              />
-              <circle cx="3" cy="-10" r="2.6" fill="hsl(var(--foreground))" />
-            </g>
-          </svg>
+        <div ref={playerRef} className="pacman-player pacman-player--cap">
+          <div ref={facingRef} className="pacman-cap-facing">
+            <div ref={chompRef} className="pacman-cap-chomp">
+              <Logo />
+            </div>
+          </div>
           <div className="pacman-dizzy">
             <Star className="pacman-dizzy-star" style={{ top: 0, left: '50%', marginLeft: -7 }} />
             <Star className="pacman-dizzy-star" style={{ bottom: 6, left: 2 }} />
@@ -142,7 +135,7 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
       <div className="pointer-events-none fixed inset-x-0 top-3 z-[72] flex justify-center px-4">
         <div className="pointer-events-auto flex touch-none items-center gap-3 rounded-full border-2 border-foreground bg-secondary py-1.5 pl-4 pr-1.5 font-mono text-sm text-foreground shadow-pop-sm sm:gap-5">
           <span className="flex items-baseline gap-1.5 whitespace-nowrap">
-            <span className="text-xs uppercase tracking-wider opacity-70">words</span>
+            <span className="text-xs uppercase tracking-wider opacity-70">bites</span>
             <span className="font-bold">{hud.eaten}</span>
             <span className="opacity-70">/ {hud.total}</span>
           </span>
@@ -172,7 +165,7 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
       {!result && (
         <div className="pointer-events-none fixed inset-x-0 top-20 z-[72] flex justify-center px-4">
           <p className="pacman-hint rounded-full bg-background/90 px-4 py-1 text-center font-cursive text-lg text-foreground">
-            {isTouch ? 'Drag anywhere to steer.' : 'Arrow keys or WASD to move.'} Eat every word. Dodge the buttons.
+            {isTouch ? 'Drag anywhere to steer.' : 'Arrow keys or WASD to move.'} Eat every word and icon. Dodge the buttons.
           </p>
         </div>
       )}
@@ -201,7 +194,7 @@ const PacmanGame = ({ onExit, onRestart }: GameProps) => {
               )}
             </h2>
             <p className="mt-6 font-mono text-lg text-foreground">
-              {hud.eaten} / {hud.total} words eaten <span className="opacity-60">({pct}%)</span>
+              {hud.eaten} / {hud.total} bites <span className="opacity-60">({pct}%)</span>
             </p>
             <p className="mt-2 font-cursive text-xl text-muted-foreground">
               {result === 'won' ? 'Nothing left to read. Was it tasty?' : 'The bomb sends its regards.'}
@@ -232,7 +225,8 @@ const PacmanEasterEgg = () => {
 
   useEffect(() => {
     const start = () => {
-      if (activeRef.current) return;
+      // No chomping behind the contact page.
+      if (activeRef.current || document.querySelector('[data-contact-page]')) return;
       setGame((g) => ({ active: true, run: g.run + 1 }));
     };
 

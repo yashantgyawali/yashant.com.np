@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { contactHref } from '@/lib/contact';
 
 // Grimacing face with a sweat drop, drawn to match the Lucide icon style
 const NervousFace = ({ className }: { className?: string }) => (
@@ -85,9 +86,7 @@ const DrunkDaveSection = () => {
           <p className="mt-6 text-center font-cursive text-xl md:text-2xl text-foreground">
             Don't understand Nepali? Another reason to{' '}
             <a
-              href="https://yashantgyawali.typeform.com/to/rbizSifr"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={contactHref('translate')}
               className="text-primary underline decoration-2 underline-offset-4 hover:decoration-secondary"
             >
               hit me up
